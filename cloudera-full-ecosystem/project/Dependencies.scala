@@ -1,0 +1,32 @@
+import sbt._
+import Keys._
+
+object Dependencies {
+  lazy val scalaTest = "org.scalatest" %% "scalatest" % "3.0.1"
+  lazy val sparkAssembly = "org.apache.spark" % "spark-assembly_2.10" % "1.6.0-cdh5.10.0"
+  lazy val sparkBagel = "org.apache.spark" % "spark-bagel_2.10" % "1.6.0-cdh5.10.0"
+  lazy val sparkCatalyst = "org.apache.spark" % "spark-catalyst_2.10" % "1.6.0-cdh5.10.0"
+  lazy val sparkCore = "org.apache.spark" % "spark-core_2.10" % "1.6.0-cdh5.10.0"
+  lazy val sparkDockerIntegrationTests = "org.apache.spark" % "spark-docker-integration-tests_2.10" % "1.6.0-cdh5.10.0"
+  lazy val sparkGraphx = "org.apache.spark" % "spark-graphx_2.10" % "1.6.0-cdh5.10.0"
+  lazy val sparkHive = "org.apache.spark" % "spark-hive_2.10" % "1.6.0-cdh5.10.0"
+  lazy val sparkLauncher = "org.apache.spark" % "spark-launcher_2.10" % "1.6.0-cdh5.10.0"
+  lazy val sparkMllib = "org.apache.spark" % "spark-mllib_2.10" % "1.6.0-cdh5.10.0"
+  lazy val sparkNetworkCommon = "org.apache.spark" % "spark-network-common_2.10" % "1.6.0-cdh5.10.0"
+  lazy val sparkNetworkShuffle = "org.apache.spark" % "spark-network-shuffle_2.10" % "1.6.0-cdh5.10.0"
+  lazy val sparkNetworkYarn = "org.apache.spark" % "spark-network-yarn_2.10" % "1.6.0-cdh5.10.0"
+  lazy val sparkRepl = "org.apache.spark" % "spark-repl_2.10" % "1.6.0-cdh5.10.0"
+  lazy val sparkSql = "org.apache.spark" % "spark-sql_2.10" % "1.6.0-cdh5.10.0"
+  lazy val sparkStreamingFlumeSink = "org.apache.spark" % "spark-streaming-flume-sink_2.10" % "1.6.0-cdh5.10.0"
+  lazy val sparkStreamingFlume = "org.apache.spark" % "spark-streaming-flume_2.10" % "1.6.0-cdh5.10.0"
+  lazy val sparkStreamingKafka = "org.apache.spark" % "spark-streaming-kafka_2.10" % "1.6.0-cdh5.10.0"
+  lazy val sparkStreamingMqttAssembly = "org.apache.spark" % "spark-streaming-mqtt-assembly_2.10" % "1.6.0-cdh5.10.0"
+  lazy val sparkStreamingMqtt = "org.apache.spark" % "spark-streaming-mqtt_2.10" % "1.6.0-cdh5.10.0"
+  lazy val sparkStreamingTwitter = "org.apache.spark" % "spark-streaming-twitter_2.10" % "1.6.0-cdh5.10.0"
+  lazy val sparkStreamingZeromq = "org.apache.spark" % "spark-streaming-zeromq_2.10" % "1.6.0-cdh5.10.0"
+  lazy val sparkStreaming = "org.apache.spark" % "spark-streaming_2.10" % "1.6.0-cdh5.10.0"
+  lazy val sparkTestTags = "org.apache.spark" % "spark-test-tags_2.10" % "1.6.0-cdh5.10.0"
+  lazy val sparkUnsafe = "org.apache.spark" % "spark-unsafe_2.10" % "1.6.0-cdh5.10.0"
+  lazy val sparkYarn = "org.apache.spark" % "spark-yarn_2.10" % "1.6.0-cdh5.10.0"
+  lazy val avro = "org.apache.avro" % "avro" % "1.7.6-cdh5.10.0"
+}

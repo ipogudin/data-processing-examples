@@ -1,0 +1,12 @@
+{
+  "namespace": "spark.test",
+  "type": "record",
+  "name": "event",
+  "fields":[
+    {"name": "id", "type": "long"},
+    {"name": "ts",  "type": "long"},
+    {"name": "user_id",  "type": "string"},
+    {"name": "url",  "type": "string"},
+    {"name": "type",  "type": "string"}
+  ]
+}

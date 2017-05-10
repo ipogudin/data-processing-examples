@@ -29,4 +29,6 @@ object Dependencies {
   lazy val sparkUnsafe = "org.apache.spark" % "spark-unsafe_2.10" % "1.6.0-cdh5.10.0"
   lazy val sparkYarn = "org.apache.spark" % "spark-yarn_2.10" % "1.6.0-cdh5.10.0"
   lazy val avro = "org.apache.avro" % "avro" % "1.7.6-cdh5.10.0"
+  lazy val typesafeConfig = "com.typesafe" % "config" % "1.3.1"
+  lazy val scalaConfig = "com.github.andr83" %% "scalaconfig" % "0.3"
 }

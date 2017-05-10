@@ -9,7 +9,7 @@ lazy val root = (project in file(".")).
     )),
     name := "Hello",
     libraryDependencies += scalaTest % Test
-  ).aggregate(spark_jobs, kafka_client)
+  ).aggregate(spark_jobs, kafka_client, data)
 
 lazy val spark_jobs = project.in(file("spark-jobs"))
   .settings(Common.settings: _*)
@@ -48,6 +48,15 @@ lazy val kafka_client = project.in(file("kafka-client"))
   .settings(
     libraryDependencies := Seq(
       sparkStreamingKafka,
+      typesafeConfig,
+      scalaConfig
+    )
+  ).dependsOn(data)
+
+lazy val data = project.in(file("data"))
+  .settings(Common.settings: _*)
+  .settings(
+    libraryDependencies := Seq(
       avro
     )
   )

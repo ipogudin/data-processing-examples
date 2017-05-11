@@ -1,10 +1,12 @@
 package data.processing.avro
 
 import java.util.Properties
+import java.util.concurrent.TimeUnit
 
 import com.typesafe.config.ConfigFactory
 import org.apache.kafka.clients.producer.{KafkaProducer, ProducerRecord}
 import com.github.andr83.scalaconfig._
+import com.yammer.metrics.core.{MetricName, MetricsRegistry}
 
 import scala.concurrent.forkjoin.ThreadLocalRandom
 
@@ -13,12 +15,15 @@ import scala.concurrent.forkjoin.ThreadLocalRandom
   */
 object Generator {
 
+  val metricsRegistry = new MetricsRegistry
+
   val config = ConfigFactory.load()
   val props = config.getConfig("kafka-client").as[Properties]
   val topic = config.getString("kafka-client.topic")
   val numberOfUsers = config.getInt("generator.number.of.users")
   val urls = config.getStringList("generator.urls")
   val eventTypes = config.getStringList("generator.event.types")
+  val throughput = config.getInt("generator.throughput")
 
   val avroEncoder = new AvroEncoder("/event-record.json")
 
@@ -33,10 +38,17 @@ object Generator {
   }
 
   def main(args: Array[String]): Unit = {
+    val meter = metricsRegistry.newMeter(new MetricName("", "", ""), "", TimeUnit.SECONDS)
     val producer = new KafkaProducer[String, Array[Byte]](props)
     while(true) {
-      val event = generateEvent()
-      producer.send(new ProducerRecord[String, Array[Byte]](topic, event._1.toString, event._2))
+      if (meter.meanRate < throughput) {
+        meter.mark()
+        val event = generateEvent()
+        producer.send(new ProducerRecord[String, Array[Byte]](topic, event._1.toString, event._2))
+      }
+      else {
+        Thread.sleep(1)
+      }
     }
     producer.flush()
     producer.close()

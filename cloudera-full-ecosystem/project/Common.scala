@@ -1,11 +1,13 @@
 import sbt._
 import Keys._
+import sbtassembly.AssemblyKeys._
 
 object Common {
   val settings: Seq[Def.Setting[_]] = Seq(
     scalaVersion := "2.10.6",
-    javacOptions ++= Seq("-source", "1.8", "-target", "1.8"), //, "-Xmx2G"),
+    javacOptions ++= Seq("-source", "1.7", "-target", "1.7"), //, "-Xmx2G"),
     scalacOptions ++= Seq("-deprecation", "-unchecked"),
+    //aggregate in assembly := false,
     resolvers += Opts.resolver.mavenLocalFile,
     resolvers ++= Seq(DefaultMavenRepository,
       Resolver.defaultLocal,

@@ -1,4 +1,4 @@
-package data.processing.avro
+package data.processing.kafkaclient
 
 import java.io.ByteArrayOutputStream
 

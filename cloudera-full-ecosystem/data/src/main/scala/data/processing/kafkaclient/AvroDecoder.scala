@@ -1,4 +1,4 @@
-package data.processing.avro
+package data.processing.kafkaclient
 
 import org.apache.avro.generic.{GenericData, GenericRecord}
 import org.apache.avro.io.{BinaryDecoder, DecoderFactory}

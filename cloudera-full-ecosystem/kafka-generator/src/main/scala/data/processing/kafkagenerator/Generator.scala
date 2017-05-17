@@ -1,4 +1,4 @@
-package data.processing.kafkaclient
+package data.processing.kafkagenerator
 
 import java.util.Properties
 import java.util.concurrent.TimeUnit
@@ -7,6 +7,7 @@ import com.typesafe.config.ConfigFactory
 import org.apache.kafka.clients.producer.{KafkaProducer, ProducerRecord}
 import com.github.andr83.scalaconfig._
 import com.yammer.metrics.core.{MetricName, MetricsRegistry}
+import data.processing.avro.AvroEncoder
 
 import scala.concurrent.forkjoin.ThreadLocalRandom
 

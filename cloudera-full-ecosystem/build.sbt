@@ -13,7 +13,7 @@ lazy val root = (project in file("."))
     libraryDependencies += scalaTest % Test
   )
   .disablePlugins(AssemblyPlugin)
-  .aggregate(spark_jobs, kafka_client, data)
+  .aggregate(spark_jobs, kafkaGenerator, data)
 
 lazy val spark_jobs = project.in(file("spark-jobs"))
   .settings(Common.settings: _*)
@@ -53,7 +53,7 @@ val defaultMergeStrategy: String => MergeStrategy = {
   case _ => MergeStrategy.first
 }
 
-lazy val kafka_client = project.in(file("kafka-client"))
+lazy val kafkaGenerator = project.in(file("kafka-generator"))
   .settings(Common.settings: _*)
   .settings(
     libraryDependencies ++= Seq(
@@ -63,7 +63,7 @@ lazy val kafka_client = project.in(file("kafka-client"))
     ),
     test in assembly := {},
     assemblyJarName in assembly := s"${name.value}-${version.value}-with-dependencies.jar",
-    mainClass in assembly := Some("data.processing.kafkaclient.Generator"),
+    mainClass in assembly := Some("data.processing.kafkagenerator.Generator"),
     assemblyMergeStrategy in assembly := defaultMergeStrategy
   ).dependsOn(data)
 

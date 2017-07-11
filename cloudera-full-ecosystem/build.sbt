@@ -35,7 +35,7 @@ lazy val spark_jobs = project.in(file("spark-jobs"))
       sparkSql % Provided,
       sparkStreamingFlumeSink % Provided,
       sparkStreamingFlume % Provided,
-      sparkStreamingKafka % Provided,
+      sparkStreamingKafka,
       sparkStreamingMqttAssembly % Provided,
       sparkStreamingMqtt % Provided,
       sparkStreamingTwitter % Provided,
@@ -44,9 +44,12 @@ lazy val spark_jobs = project.in(file("spark-jobs"))
       sparkTestTags % Provided,
       sparkUnsafe % Provided,
       sparkYarn % Provided
-    )
+    ),
+    test in assembly := {},
+    assemblyJarName in assembly := s"${name.value}-${version.value}-with-dependencies.jar",
+    assemblyMergeStrategy in assembly := defaultMergeStrategy
   )
-  .disablePlugins(AssemblyPlugin)
+  .dependsOn(data)
 
 val defaultMergeStrategy: String => MergeStrategy = {
   case PathList("META-INF", xs @ _*) => MergeStrategy.discard

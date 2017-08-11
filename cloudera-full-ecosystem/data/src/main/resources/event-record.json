@@ -5,8 +5,8 @@
   "fields":[
     {"name": "id", "type": "long"},
     {"name": "ts",  "type": "long"},
-    {"name": "user_id",  "type": "string"},
-    {"name": "url",  "type": "string"},
-    {"name": "type",  "type": "string"}
+    {"name": "user_id",  "type": "string", "avro.java.string": "String"},
+    {"name": "url",  "type": "string", "avro.java.string": "String"},
+    {"name": "type",  "type": "string", "avro.java.string": "String"}
   ]
 }

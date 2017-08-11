@@ -29,7 +29,7 @@ object Generator {
   val avroEncoder = new AvroEncoder("/event-record.json")
 
   def generateEvent() = {
-    val id = ThreadLocalRandom.current().nextLong()
+    val id = Math.abs(ThreadLocalRandom.current().nextLong())
     val ts = java.lang.System.currentTimeMillis()
     val userId = ThreadLocalRandom.current().nextInt(numberOfUsers).toHexString
     val url = urls.get(ThreadLocalRandom.current().nextInt(urls.size()))

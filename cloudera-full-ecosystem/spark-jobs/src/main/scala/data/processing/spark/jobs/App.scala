@@ -1,4 +1,4 @@
-package spark.test
+package data.processing.spark.jobs
 
 import scala.collection.immutable.HashSet
 

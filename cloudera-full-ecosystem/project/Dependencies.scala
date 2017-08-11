@@ -20,6 +20,7 @@ object Dependencies {
   lazy val sparkStreamingFlumeSink = "org.apache.spark" % "spark-streaming-flume-sink_2.10" % "1.6.0-cdh5.10.0"
   lazy val sparkStreamingFlume = "org.apache.spark" % "spark-streaming-flume_2.10" % "1.6.0-cdh5.10.0"
   lazy val sparkStreamingKafka = "org.apache.spark" % "spark-streaming-kafka_2.10" % "1.6.0-cdh5.10.0"
+  lazy val kafka = "org.apache.kafka" % "kafka_2.10" % "0.9.0-kafka-2.0.2"
   lazy val sparkStreamingMqttAssembly = "org.apache.spark" % "spark-streaming-mqtt-assembly_2.10" % "1.6.0-cdh5.10.0"
   lazy val sparkStreamingMqtt = "org.apache.spark" % "spark-streaming-mqtt_2.10" % "1.6.0-cdh5.10.0"
   lazy val sparkStreamingTwitter = "org.apache.spark" % "spark-streaming-twitter_2.10" % "1.6.0-cdh5.10.0"
@@ -31,4 +32,8 @@ object Dependencies {
   lazy val avro = "org.apache.avro" % "avro" % "1.7.6-cdh5.10.0"
   lazy val typesafeConfig = "com.typesafe" % "config" % "1.3.1"
   lazy val scalaConfig = "com.github.andr83" %% "scalaconfig" % "0.3"
+  lazy val hadoopClient = "org.apache.hadoop" % "hadoop-client" % "2.6.0-cdh5.10.0"
+  lazy val hadoopCommon = "org.apache.hadoop" % "hadoop-common" % "2.6.0-cdh5.10.0"
+  lazy val hadoopMain = "org.apache.hadoop" % "hadoop-main" % "2.6.0-cdh5.10.0"
+  lazy val parquet = "com.twitter" % "parquet" % "1.5.0-cdh5.10.0"
 }

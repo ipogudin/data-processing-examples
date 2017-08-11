@@ -1,60 +1,61 @@
 import Dependencies._
+import sbt.Keys.libraryDependencies
 import sbtassembly.MergeStrategy
 
-
-lazy val root = (project in file("."))
-  .settings(Common.settings: _*)
-  .settings(
-    inThisBuild(List(
-      organization := "data.processing",
-      version      := "0.1.0-SNAPSHOT"
-    )),
-    name := "cloudera-full-ecosystem",
-    libraryDependencies += scalaTest % Test
-  )
-  .disablePlugins(AssemblyPlugin)
-  .aggregate(spark_jobs, kafkaGenerator, data)
-
-lazy val spark_jobs = project.in(file("spark-jobs"))
-  .settings(Common.settings: _*)
-  .settings(
-    libraryDependencies ++= Seq(
-      sparkAssembly % Provided,
-      sparkBagel % Provided,
-      sparkCatalyst % Provided,
-      sparkCore % Provided,
-      sparkDockerIntegrationTests % Provided,
-      sparkGraphx % Provided,
-      sparkHive % Provided,
-      sparkLauncher % Provided,
-      sparkMllib % Provided,
-      sparkNetworkCommon % Provided,
-      sparkNetworkShuffle % Provided,
-      sparkNetworkYarn % Provided,
-      sparkRepl % Provided,
-      sparkSql % Provided,
-      sparkStreamingFlumeSink % Provided,
-      sparkStreamingFlume % Provided,
-      sparkStreamingKafka,
-      sparkStreamingMqttAssembly % Provided,
-      sparkStreamingMqtt % Provided,
-      sparkStreamingTwitter % Provided,
-      sparkStreamingZeromq % Provided,
-      sparkStreaming % Provided,
-      sparkTestTags % Provided,
-      sparkUnsafe % Provided,
-      sparkYarn % Provided
-    ),
-    test in assembly := {},
-    assemblyJarName in assembly := s"${name.value}-${version.value}-with-dependencies.jar",
-    assemblyMergeStrategy in assembly := defaultMergeStrategy
-  )
-  .dependsOn(data)
 
 val defaultMergeStrategy: String => MergeStrategy = {
   case PathList("META-INF", xs @ _*) => MergeStrategy.discard
   case _ => MergeStrategy.first
 }
+
+lazy val data = project.in(file("data"))
+  .settings(Common.settings: _*)
+  .settings(
+    libraryDependencies ++= Seq(
+      avro
+    )
+  )
+  .disablePlugins(AssemblyPlugin)
+
+lazy val sparkJobsDependencies = Seq(
+  sparkAssembly % Provided,
+  sparkBagel % Provided,
+  sparkCatalyst % Provided,
+  sparkCore % Provided,
+  sparkDockerIntegrationTests % Provided,
+  sparkGraphx % Provided,
+  sparkHive % Provided,
+  sparkLauncher % Provided,
+  sparkMllib % Provided,
+  sparkNetworkCommon % Provided,
+  sparkNetworkShuffle % Provided,
+  sparkNetworkYarn % Provided,
+  sparkRepl % Provided,
+  sparkSql % Provided,
+  sparkStreamingFlumeSink % Provided,
+  sparkStreamingFlume % Provided,
+  sparkStreamingKafka,
+  kafka % Provided,
+  sparkStreamingMqttAssembly % Provided,
+  sparkStreamingMqtt % Provided,
+  sparkStreamingTwitter % Provided,
+  sparkStreamingZeromq % Provided,
+  sparkStreaming % Provided,
+  sparkTestTags % Provided,
+  sparkUnsafe % Provided,
+  sparkYarn % Provided,
+  hadoopClient % Provided excludeAll ExclusionRule(organization = "javax.servlet"),
+  scalaConfig)
+
+lazy val sparkJobs = project.in(file("spark-jobs"))
+  .settings(Common.settings: _*)
+  .settings(
+    libraryDependencies ++= sparkJobsDependencies,
+    test in assembly := {},
+    assemblyJarName in assembly := s"${name.value}-${version.value}-with-dependencies.jar",
+    assemblyMergeStrategy in assembly := defaultMergeStrategy
+  )
+  .dependsOn(data)
 
 lazy val kafkaGenerator = project.in(file("kafka-generator"))
   .settings(Common.settings: _*)
@@ -70,11 +71,25 @@ lazy val kafkaGenerator = project.in(file("kafka-generator"))
     assemblyMergeStrategy in assembly := defaultMergeStrategy
   ).dependsOn(data)
 
-lazy val data = project.in(file("data"))
-  .settings(Common.settings: _*)
+// Section to describe modules with compile time dependencies to provide an ability to run such modules in IntelliJ Idea
+
+//lazy val vvv = libraryDependencies ++= sparkJobsDependencies.map(m => m.organization % m.name % m.revision % Compile)
+lazy val sparkJobsRunner = project.in(file("spark-job-runner"))
+    .dependsOn(sparkJobs)
   .settings(
-    libraryDependencies ++= Seq(
-      avro
-    )
+    libraryDependencies ++= sparkJobsDependencies.map(m => m.copy(configurations = Some("compile")))
   )
   .disablePlugins(AssemblyPlugin)
+
+lazy val root = (project in file("."))
+  .settings(Common.settings: _*)
+  .settings(
+    inThisBuild(List(
+      organization := "data.processing",
+      version      := "0.1.0-SNAPSHOT"
+    )),
+    name := "cloudera-full-ecosystem",
+    libraryDependencies += scalaTest % Test
+  )
+  .disablePlugins(AssemblyPlugin)
+  .aggregate(sparkJobs, kafkaGenerator, data, sparkJobsRunner)

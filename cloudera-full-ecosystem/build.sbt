@@ -18,11 +18,8 @@ lazy val data = project.in(file("data"))
   .disablePlugins(AssemblyPlugin)
 
 lazy val sparkJobsDependencies = Seq(
-  sparkAssembly % Provided,
-  sparkBagel % Provided,
   sparkCatalyst % Provided,
   sparkCore % Provided,
-  sparkDockerIntegrationTests % Provided,
   sparkGraphx % Provided,
   sparkHive % Provided,
   sparkLauncher % Provided,
@@ -36,14 +33,10 @@ lazy val sparkJobsDependencies = Seq(
   sparkStreamingFlume % Provided,
   sparkStreamingKafka,
   kafka % Provided,
-  sparkStreamingMqttAssembly % Provided,
-  sparkStreamingMqtt % Provided,
-  sparkStreamingTwitter % Provided,
-  sparkStreamingZeromq % Provided,
   sparkStreaming % Provided,
-  sparkTestTags % Provided,
   sparkUnsafe % Provided,
   sparkYarn % Provided,
+  typesafeConfig,
   hadoopClient % Provided excludeAll ExclusionRule(organization = "javax.servlet"),
   scalaConfig)
 
@@ -75,7 +68,8 @@ lazy val kafkaGenerator = project.in(file("kafka-generator"))
 
 //lazy val vvv = libraryDependencies ++= sparkJobsDependencies.map(m => m.organization % m.name % m.revision % Compile)
 lazy val sparkJobsRunner = project.in(file("spark-job-runner"))
-    .dependsOn(sparkJobs)
+  .settings(Common.settings: _*)
+  .dependsOn(sparkJobs)
   .settings(
     libraryDependencies ++= sparkJobsDependencies.map(m => m.copy(configurations = Some("compile")))
   )

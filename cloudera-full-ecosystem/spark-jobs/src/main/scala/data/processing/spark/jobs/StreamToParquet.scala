@@ -14,7 +14,6 @@ import org.apache.spark.rdd.RDD
 import org.apache.spark.sql.types.{DataType, StructType}
 
 import collection.JavaConverters._
-import com.databricks.spark.avro._
 import org.apache.avro.Schema
 import data.processing.spark.jobs
 

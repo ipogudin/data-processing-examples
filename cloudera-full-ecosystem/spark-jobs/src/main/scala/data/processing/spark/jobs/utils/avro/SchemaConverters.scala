@@ -13,26 +13,20 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package data.processing.spark.jobs
+package data.processing.spark.jobs.utils.avro
 
-import java.nio.ByteBuffer
+import org.apache.avro.Schema.Type._
+import org.apache.avro.SchemaBuilder._
+import org.apache.avro.{Schema, SchemaBuilder}
+import org.apache.spark.sql.types._
 
 import scala.collection.JavaConverters._
-
-import org.apache.avro.generic.GenericData.Fixed
-import org.apache.avro.generic.{GenericData, GenericRecord}
-import org.apache.avro.{Schema, SchemaBuilder}
-import org.apache.avro.SchemaBuilder._
-import org.apache.avro.Schema.Type._
-
-import org.apache.spark.sql.catalyst.expressions.GenericRow
-import org.apache.spark.sql.types._
 
 /**
   * This object contains method that are used to convert sparkSQL schemas to avro schemas and vice
   * versa.
   */
-object CSchemaConverters {
+object SchemaConverters {
 
   class IncompatibleSchemaException(msg: String, ex: Throwable = null) extends Exception(msg, ex)
 

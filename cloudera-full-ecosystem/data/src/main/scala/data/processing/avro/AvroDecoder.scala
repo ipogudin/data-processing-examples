@@ -7,9 +7,10 @@ import org.apache.avro.specific.SpecificDatumReader
 /**
   * Created by ipogudin on 03/05/2017.
   */
-class AvroDecoder(val schemaPath: String) extends SchemaProcessor(schemaPath) {
+@SerialVersionUID(9902040L)
+class AvroDecoder(override val schemaPath: String) extends SchemaProcessor(schemaPath) {
 
-  val reader = new SpecificDatumReader[GenericRecord](schema)
+  @transient lazy val reader = new SpecificDatumReader[GenericRecord](schema)
 
   def decode(b: Array[Byte]): GenericRecord = {
     val decoder: BinaryDecoder = DecoderFactory.get().binaryDecoder(b, null)

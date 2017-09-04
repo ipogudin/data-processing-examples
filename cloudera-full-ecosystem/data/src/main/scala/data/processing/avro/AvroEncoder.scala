@@ -9,9 +9,10 @@ import org.apache.avro.specific.SpecificDatumWriter
 /**
   * Created by ipogudin on 03/05/2017.
   */
-class AvroEncoder(val schemaPath: String) extends SchemaProcessor(schemaPath) {
+@SerialVersionUID(9902030L)
+class AvroEncoder(override val schemaPath: String) extends SchemaProcessor(schemaPath) {
 
-  val writer = new SpecificDatumWriter[GenericRecord](schema)
+  @transient lazy val writer = new SpecificDatumWriter[GenericRecord](schema)
 
   def encode(t: Product): Array[Byte] = {
     val e: GenericRecord = new GenericData.Record(schema)

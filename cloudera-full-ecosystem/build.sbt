@@ -71,7 +71,7 @@ lazy val sparkJobsRunner = project.in(file("spark-job-runner"))
   .settings(Common.settings: _*)
   .dependsOn(sparkJobs)
   .settings(
-    libraryDependencies ++= sparkJobsDependencies.map(m => m.copy(configurations = Some("compile")))
+    libraryDependencies ++= sparkJobsDependencies.map(m => m.withConfigurations(configurations = Some("compile")))
   )
   .disablePlugins(AssemblyPlugin)
 

@@ -1,0 +1,206 @@
+version: '3.4'
+services:
+  historyserver:
+    image: ipogudin/cloudera-cluster-historyserver:5.14.0.1
+    hostname: historyserver
+    domainname: cloudera-cluster-net
+    container_name: historyserver
+    ports:
+      - "19888:19888"
+    environment:
+      HADOOP_JOB_HISTORYSERVER_HEAPSIZE: "256"
+  hdfs-namenode:
+    image: ipogudin/cloudera-cluster-hdfs-namenode:5.14.0.1
+    hostname: hdfs-namenode
+    domainname: cloudera-cluster-net
+    container_name: hdfs-namenode
+    environment:
+      HADOOP_HEAPSIZE: "256"
+  hdfs-secondarynamenode:
+    image: ipogudin/cloudera-cluster-hdfs-secondarynamenode:5.14.0.1
+    hostname: hdfs-secondarynamenode
+    domainname: cloudera-cluster-net
+    container_name: hdfs-secondarynamenode
+    depends_on:
+      - hdfs-namenode
+    environment:
+      HADOOP_HEAPSIZE: "256"
+  yarn-resourcemanager:
+    image: ipogudin/cloudera-cluster-yarn-resourcemanager:5.14.0.1
+    hostname: yarn-resourcemanager
+    domainname: cloudera-cluster-net
+    container_name: yarn-resourcemanager
+    ports:
+      - "8088:8088"
+    depends_on:
+      - historyserver
+    environment:
+      YARN_RESOURCEMANAGER_HEAPSIZE: "512"
+  datanode1:
+    image: ipogudin/cloudera-cluster-datanode:5.14.0.1
+    hostname: datanode1
+    domainname: cloudera-cluster-net
+    container_name: datanode1
+    ports:
+      - "8042:8042"
+    depends_on:
+      - historyserver
+      - hdfs-namenode
+      - hdfs-secondarynamenode
+      - yarn-resourcemanager
+    environment:
+      YARN_HEAPSIZE: "2048"
+      HADOOP_HEAPSIZE: "2048"
+  datanode2:
+    image: ipogudin/cloudera-cluster-datanode:5.14.0.1
+    hostname: datanode2
+    domainname: cloudera-cluster-net
+    container_name: datanode2
+    ports:
+          - "8043:8042"
+    depends_on:
+      - historyserver
+      - hdfs-namenode
+      - hdfs-secondarynamenode
+      - yarn-resourcemanager
+    environment:
+      YARN_HEAPSIZE: "2048"
+      HADOOP_HEAPSIZE: "2048"
+  zookeeper1:
+    image: ipogudin/cloudera-cluster-zookeeper:5.14.0.1
+    hostname: zookeeper1
+    domainname: cloudera-cluster-net
+    container_name: zookeeper1
+    environment:
+      ZOOKEEPER_MYID: "1"
+      ZOOKEEPER_CLIENT_PORT: "2181"
+      ZOOKEEPER_SERVERS: "server.1=zookeeper1.cloudera-cluster-net:2201:8301\nserver.2=zookeeper2.cloudera-cluster-net:2202:8302\nserver.3=zookeeper3.cloudera-cluster-net:2203:8303"
+      SERVER_JVMFLAGS: "-Xms64m -Xmx64m"
+  zookeeper2:
+    image: ipogudin/cloudera-cluster-zookeeper:5.14.0.1
+    hostname: zookeeper2
+    domainname: cloudera-cluster-net
+    container_name: zookeeper2
+    environment:
+      ZOOKEEPER_MYID: "2"
+      ZOOKEEPER_CLIENT_PORT: "2182"
+      ZOOKEEPER_SERVERS: "server.1=zookeeper1.cloudera-cluster-net:2201:8301\nserver.2=zookeeper2.cloudera-cluster-net:2202:8302\nserver.3=zookeeper3.cloudera-cluster-net:2203:8303"
+      SERVER_JVMFLAGS: "-Xms64m -Xmx64m"
+  zookeeper3:
+    image: ipogudin/cloudera-cluster-zookeeper:5.14.0.1
+    hostname: zookeeper3
+    domainname: cloudera-cluster-net
+    container_name: zookeeper3
+    environment:
+      ZOOKEEPER_MYID: "3"
+      ZOOKEEPER_CLIENT_PORT: "2183"
+      ZOOKEEPER_SERVERS: "server.1=zookeeper1.cloudera-cluster-net:2201:8301\nserver.2=zookeeper2.cloudera-cluster-net:2202:8302\nserver.3=zookeeper3.cloudera-cluster-net:2203:8303"
+      SERVER_JVMFLAGS: "-Xms64m -Xmx64m"
+  hbase-master:
+    image: ipogudin/cloudera-cluster-hbase-master:5.14.0.1
+    hostname: hbase-master
+    domainname: cloudera-cluster-net
+    container_name: hbase-master
+    ports:
+     - "16010:16010"
+    depends_on:
+      - zookeeper1
+      - zookeeper2
+      - zookeeper3
+      - datanode1
+      - datanode2
+    environment:
+      REGIONSERVERS: "regionserver1.cloudera-cluster-net\nregionserver2.cloudera-cluster-net"
+      BBACKUP_MASTERS: "hbase-master-backup.cloudera-cluster-net"
+      HBASE_SITE_HBASE_ZOOKEEPER_QUORUM: "zookeeper1.cloudera-cluster-net:2181,zookeeper2.cloudera-cluster-net:2182,zookeeper3.cloudera-cluster-net:2183"
+      HBASE_ENV_HBASE_HEAPSIZE: "256m"
+  hbase-master-backup:
+    image: ipogudin/cloudera-cluster-hbase-master-backup:5.14.0.1
+    hostname: hbase-master-backup
+    domainname: cloudera-cluster-net
+    container_name: hbase-master-backup
+    depends_on:
+      - hbase-master
+    environment:
+      REGIONSERVERS: "regionserver1.cloudera-cluster-net\nregionserver2.cloudera-cluster-net"
+      BACKUP_MASTERS: "hbase-master-backup.cloudera-cluster-net"
+      HBASE_SITE_HBASE_ZOOKEEPER_QUORUM: "zookeeper1.cloudera-cluster-net:2181,zookeeper2.cloudera-cluster-net:2182,zookeeper3.cloudera-cluster-net:2183"
+      HBASE_ENV_HBASE_HEAPSIZE: "256m"
+  regionserver1:
+    image: ipogudin/cloudera-cluster-hbase-regionserver:5.14.0.1
+    hostname: regionserver1
+    domainname: cloudera-cluster-net
+    container_name: regionserver1
+    ports:
+     - "16031:16030"
+    depends_on:
+      - hbase-master-backup
+    environment:
+      REGIONSERVERS: "regionserver1.cloudera-cluster-net\nregionserver2.cloudera-cluster-net"
+      BACKUP_MASTERS: "hbase-master-backup.cloudera-cluster-net"
+      HBASE_SITE_HBASE_ZOOKEEPER_QUORUM: "zookeeper1.cloudera-cluster-net:2181,zookeeper2.cloudera-cluster-net:2182,zookeeper3.cloudera-cluster-net:2183"
+      HBASE_ENV_HBASE_HEAPSIZE: "256m"
+  regionserver2:
+    image: ipogudin/cloudera-cluster-hbase-regionserver:5.14.0.1
+    hostname: regionserver2
+    domainname: cloudera-cluster-net
+    container_name: regionserver2
+    ports:
+     - "16032:16030"
+    depends_on:
+      - hbase-master-backup
+    environment:
+      REGIONSERVERS: "regionserver1.cloudera-cluster-net\nregionserver2.cloudera-cluster-net"
+      BACKUP_MASTERS: "hbase-master-backup.cloudera-cluster-net"
+      HBASE_SITE_HBASE_ZOOKEEPER_QUORUM: "zookeeper1.cloudera-cluster-net:2181,zookeeper2.cloudera-cluster-net:2182,zookeeper3.cloudera-cluster-net:2183"
+      HBASE_ENV_HBASE_HEAPSIZE: "256m"
+  kafka1:
+    image: ipogudin/cloudera-cluster-kafka-node:5.14.0.1
+    hostname: kafka1
+    domainname: cloudera-cluster-net
+    container_name: kafka1
+    depends_on:
+      - zookeeper1
+      - zookeeper2
+      - zookeeper3
+    environment:
+      SERVER_PROPERTIES_BROKER_ID: "1"
+      SERVER_PROPERTIES_LISTENERS: "0.0.0.0:9092"
+      SERVER_PROPERTIES_ADVERTISED_LISTENERS: "kafka1.cloudera-cluster-net:9092"
+      SERVER_PROPERTIES_ZOOKEEPER_CONNECT: "zookeeper1.cloudera-cluster-net:2181,zookeeper2.cloudera-cluster-net:2182,zookeeper3.cloudera-cluster-net:2183"
+      KAFKA_HEAP_OPTS: "-Xmx256m -Xms256m"
+  kafka2:
+    image: ipogudin/cloudera-cluster-kafka-node:5.14.0.1
+    hostname: kafka2
+    domainname: cloudera-cluster-net
+    container_name: kafka2
+    depends_on:
+      - zookeeper1
+      - zookeeper2
+      - zookeeper3
+    environment:
+      SERVER_PROPERTIES_BROKER_ID: "2"
+      SERVER_PROPERTIES_LISTENERS: "0.0.0.0:9092"
+      SERVER_PROPERTIES_ADVERTISED_LISTENERS: "kafka2.cloudera-cluster-net:9092"
+      SERVER_PROPERTIES_ZOOKEEPER_CONNECT: "zookeeper1.cloudera-cluster-net:2181,zookeeper2.cloudera-cluster-net:2182,zookeeper3.cloudera-cluster-net:2183"
+      KAFKA_HEAP_OPTS: "-Xmx256m -Xms256m"
+  gateway:
+    image: ipogudin/cloudera-cluster-gateway:5.14.0.1
+    hostname: gateway
+    domainname: cloudera-cluster-net
+    container_name: gateway
+    ports:
+         - "4040:4040"
+    volumes:
+      - type: "bind"
+        source: "./shared"
+        target: "/shared"
+    environment:
+      REGIONSERVERS: "regionserver1.cloudera-cluster-net\nregionserver2.cloudera-cluster-net"
+      BACKUP_MASTERS: "hbase-master-backup.cloudera-cluster-net"
+      HBASE_SITE_HBASE_ZOOKEEPER_QUORUM: "zookeeper1.cloudera-cluster-net:2181,zookeeper2.cloudera-cluster-net:2182,zookeeper3.cloudera-cluster-net:2183"
+
+networks:
+ default:
+  external:
+    name: cloudera-cluster-net

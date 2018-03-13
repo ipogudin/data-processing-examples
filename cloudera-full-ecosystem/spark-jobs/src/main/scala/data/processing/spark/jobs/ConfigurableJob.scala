@@ -4,6 +4,9 @@ import com.typesafe.config.ConfigFactory
 import com.typesafe.config.Config
 import org.apache.spark._
 import org.apache.spark.sql.SparkSession
+import org.slf4j.LoggerFactory
+
+import scala.io.Source
 
 
 /**
@@ -11,6 +14,7 @@ import org.apache.spark.sql.SparkSession
   */
 trait ConfigurableJob {
 
+  private val logger = LoggerFactory.getLogger("root")
   val APPLICATION_CONF = "application.conf"
 
   def run(spark: SparkSession, config: Config): Unit
@@ -19,9 +23,8 @@ trait ConfigurableJob {
     val isLocalMode = args.length > 0 && args.contains("local")
     val sparkBuilder = SparkSession.builder().appName("Simple Streaming Application")
     val spark = (if (isLocalMode) sparkBuilder.master("local[*]") else sparkBuilder).getOrCreate()
-    val configFile = SparkFiles.get("application.conf")
-    val f = new java.io.File(configFile)
-    val config = if (f.exists()) ConfigFactory.load().withFallback(ConfigFactory.parseFile(f)) else ConfigFactory.load()
+    val config = ConfigFactory.load()
+    logger.info("Loaded configuration: {}", config.toString)
     run(spark, config)
   }
 

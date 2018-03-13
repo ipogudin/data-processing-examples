@@ -6,5 +6,15 @@ Simple building jars for all sub-projects.
 Building uber jars for some sub-projects (for instance kafka-client).
 > sbt assembly
 
-java -jar kafka-generator/target/scala-2.10/kafka-generat-0.1.0-SNAPSHOT-with-dependencies.jar
-spark-submit --class data.processing.spark.jobs.StreamFromKafkaToParquetWithCheckpoints --master local[4] spark-jobs/target/scala-2.10/spark-jobs-0.1.0-SNAPSHOT-with-dependencies.jar
+# Running
+
+Running examples kafka generator and streaming job to save data from kafka to parquet files on hdfs.
+> ./execute run-cluster
+
+> ./execute kafka-generator
+
+> ./execute stream-from-kafka-to-parquet-with-checkpoints
+
+Showing application logs.
+> docker exec -it gateway yarn logs -applicationId APP_ID
+

@@ -20,7 +20,7 @@ import org.slf4j.LoggerFactory
   */
 object StreamFromKafkaToParquetWithCheckpoints extends ConfigurableJob {
 
-  val logger = LoggerFactory.getLogger(StreamFromKafkaToParquetWithCheckpoints.getClass)
+  private val logger = LoggerFactory.getLogger(StreamFromKafkaToParquetWithCheckpoints.getClass)
 
   val AVRO_SCHEMA = "avro.schema"
   val TARGET_DIR = "target.dir"

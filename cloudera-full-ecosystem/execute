@@ -23,9 +23,9 @@ kafka-generator() {
     docker exec -it gateway java -cp /shared/kafka-generator:/shared/kafka-generator/kafka-generator-with-dependencies.jar data.processing.kafkagenerator.Generator
 }
 
-stream-from-kafka-to-parquet-with-checkpoints() {
+stream-from-kafka82-to-parquet-with-checkpoints() {
     cp spark-jobs/target/scala-2.11/spark-jobs-*-with-dependencies.jar shared/spark-jobs/spark-jobs-with-dependencies.jar
-    docker exec -it gateway spark2-submit --master yarn --deploy-mode client --executor-memory 512M --executor-cores 1 --class data.processing.spark.jobs.StreamFromKafkaToParquetWithCheckpoints --driver-class-path /shared/spark-jobs/ /shared/spark-jobs/spark-jobs-with-dependencies.jar
+    docker exec -it gateway spark2-submit --master yarn --deploy-mode client --executor-memory 512M --executor-cores 1 --class data.processing.spark.jobs.StreamFromKafka82ToParquetWithCheckpoints --driver-class-path /shared/spark-jobs/ /shared/spark-jobs/spark-jobs-with-dependencies.jar
 }
 
 execute() {
@@ -39,11 +39,11 @@ execute() {
     kafka-generator)
         kafka-generator ${@:2}
         ;;
-    stream-from-kafka-to-parquet-with-checkpoints)
-        stream-from-kafka-to-parquet-with-checkpoints ${@:2}
+    stream-from-kafka82-to-parquet-with-checkpoints)
+        stream-from-kafka82-to-parquet-with-checkpoints ${@:2}
         ;;
     *)
-        echo $"Usage: $0 {run-cluster|destroy-cluster|kafka-generator|stream-from-kafka-to-parquet-with-checkpoints}"
+        echo $"Usage: $0 {run-cluster|destroy-cluster|kafka-generator|stream-from-kafka82-to-parquet-with-checkpoints}"
         exit 1
   esac
 }

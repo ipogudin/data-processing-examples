@@ -18,23 +18,26 @@ import org.slf4j.LoggerFactory
 /**
   * Created by ipogudin on 14/03/2017.
   */
-object StreamFromKafkaToParquetWithCheckpoints extends ConfigurableJob {
+object StreamFromKafka82ToParquetWithCheckpoints extends ConfigurableJob {
 
-  private val logger = LoggerFactory.getLogger(StreamFromKafkaToParquetWithCheckpoints.getClass)
+  private val logger = LoggerFactory.getLogger(StreamFromKafka82ToParquetWithCheckpoints.getClass)
 
+  val BASE_KEY = "stream-from-kafka82-to-parquet-with-checkpoints"
   val AVRO_SCHEMA = "avro.schema"
   val TARGET_DIR = "target.dir"
   val CHECKPOINT_DIR = "checkpoint.dir"
   val CHECKPOINT_INTERVAL = "checkpoint.interval"
-  val KAFKA_TOPICS = "kafka-consumer.topics"
-  val KAFKA_CONSUMER = "kafka-consumer"
+  val KAFKA_TOPICS = "kafka-consumer82.topics"
+  val KAFKA_CONSUMER = "kafka-consumer82"
   val STREAMING_CONTEXT_BATCH_DURATION = "streaming-context.batch-duration"
 
   def run(spark: SparkSession, config: Config): Unit = {
+    val jobConfig = config.getConfig(BASE_KEY)
+
     val ssc = StreamingContext.getOrCreate(
-      config.getString(CHECKPOINT_DIR),
+      jobConfig.getString(CHECKPOINT_DIR),
       () => {
-        process(spark, config)
+        process(spark, jobConfig)
       })
 
     ssc.start()

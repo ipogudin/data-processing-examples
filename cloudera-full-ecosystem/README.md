@@ -13,7 +13,7 @@ Running examples kafka generator and streaming job to save data from kafka to pa
 
 > ./execute kafka-generator
 
-> ./execute stream-from-kafka-to-parquet-with-checkpoints
+> ./execute stream-from-kafka82-to-parquet-with-checkpoints
 
 Showing application logs.
 > docker exec -it gateway yarn logs -applicationId APP_ID

@@ -31,7 +31,8 @@ lazy val sparkJobsDependencies = Seq(
   sparkSql % Provided,
   sparkStreamingFlumeSink % Provided,
   sparkStreamingFlume % Provided,
-  sparkStreamingKafka,
+  sparkStreamingKafka82,
+  sparkStreamingKafka10,
   kafka % Provided,
   sparkStreaming % Provided,
   sparkUnsafe % Provided,
@@ -54,7 +55,7 @@ lazy val kafkaGenerator = project.in(file("kafka-generator"))
   .settings(Common.settings: _*)
   .settings(
     libraryDependencies ++= Seq(
-      sparkStreamingKafka,
+      sparkStreamingKafka82,
       typesafeConfig,
       scalaConfig
     ),

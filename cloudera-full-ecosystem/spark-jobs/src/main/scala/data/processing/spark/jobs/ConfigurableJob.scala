@@ -20,11 +20,11 @@ trait ConfigurableJob {
   def run(spark: SparkSession, config: Config): Unit
 
   def main(args: Array[String]): Unit = {
-    val isLocalMode = args.length > 0 && args.contains("local")
-    val sparkBuilder = SparkSession.builder().appName("Simple Streaming Application")
-    val spark = (if (isLocalMode) sparkBuilder.master("local[*]") else sparkBuilder).getOrCreate()
     val config = ConfigFactory.load()
     logger.info("Loaded configuration: {}", config.toString)
+    val isLocalMode = args.length > 0 && args.contains("local")
+    val sparkBuilder = SparkSession.builder().appName(config.getString("app.name"))
+    val spark = (if (isLocalMode) sparkBuilder.master("local[*]") else sparkBuilder).getOrCreate()
     run(spark, config)
   }
 

@@ -83,7 +83,7 @@ lazy val root = (project in file("."))
       organization := "data.processing",
       version      := "0.1.0-SNAPSHOT"
     )),
-    name := "cloudera-full-ecosystem",
+    name := "cloudera-spark",
     libraryDependencies += scalaTest % Test
   )
   .disablePlugins(AssemblyPlugin)

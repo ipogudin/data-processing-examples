@@ -70,14 +70,16 @@ object StreamFromKafka82ToParquetWithCheckpoints extends ConfigurableJob {
         rdd
       }).checkpoint(Durations.milliseconds(checkpointInterval))
 
+    val st = SchemaConverters.toSqlType(avroDecoder.schema).dataType.asInstanceOf[StructType]
+
     directKafkaStream.foreachRDD(rdd => {
       val spark = SparkSession.builder.config(rdd.sparkContext.getConf).getOrCreate()
       import spark.implicits._
 
-      val st = SchemaConverters.toSqlType(avroDecoder.schema).dataType.asInstanceOf[StructType]
-
       val rowRdd = rdd.map(r => r._2)
-      spark.createDataFrame(rowRdd, st).write.mode(SaveMode.Append).parquet(targetDir)
+      if (!rowRdd.isEmpty) { // the job should not create an empty parquet file
+        spark.createDataFrame(rowRdd, st).write.mode(SaveMode.Append).parquet(targetDir)
+      }
     })
 
     ssc

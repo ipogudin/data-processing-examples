@@ -22,6 +22,7 @@ object Common {
       Classpaths.sbtPluginReleases,
       "Eclipse repositories" at "https://repo.eclipse.org/service/local/repositories/egit-releases/content/",
       "Sonatype OSS Snapshots" at "https://oss.sonatype.org/content/repositories/snapshots",
+      "Spring plugins" at "http://repo.spring.io/plugins-release",
       "Cloudera Repo" at "https://repository.cloudera.com/artifactory/cloudera-repos/")
   )
 }
